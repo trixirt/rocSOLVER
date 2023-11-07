@@ -30,6 +30,7 @@ License:        MIT
 ExclusiveArch:  x86_64
 
 Source0:        %{url}/archive/refs/tags/rocm-%{rocm_version}.tar.gz#/%{upstreamname}-%{rocm_version}.tar.gz
+Patch0:         0001-prepare-rocsolver-cmake-for-fedora.patch
 
 BuildRequires:  cmake
 BuildRequires:  compiler-rt
