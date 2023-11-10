@@ -15,9 +15,8 @@
 # export QA_RPATHS=0xff
 %bcond_with test
 
-# Even doing just gfx9 is too big
-# Just just do what is possible.
-%global rs_gpu_list gfx9 gfx10 gfx11
+# Fortran is only used in testing
+%global build_fflags %{nil}
 
 Name:           rocsolver
 Version:        %{rocm_version}
@@ -30,7 +29,6 @@ License:        MIT
 ExclusiveArch:  x86_64
 
 Source0:        %{url}/archive/refs/tags/rocm-%{rocm_version}.tar.gz#/%{upstreamname}-%{rocm_version}.tar.gz
-Patch0:         0001-prepare-rocsolver-cmake-for-fedora.patch
 
 BuildRequires:  cmake
 BuildRequires:  compiler-rt
@@ -48,8 +46,13 @@ BuildRequires:  rocm-rpm-macros-modules
 BuildRequires:  rocprim-devel
 
 %if %{with test}
+BuildRequires:  blas-static
+BuildRequires:  fmt-devel
+BuildRequires:  gcc-gfortran
 BuildRequires:  gtest-devel
+BuildRequires:  lapack-static
 BuildRequires:  libomp-devel
+BuildRequires:  rocsparse-devel
 %endif
 
 %description
@@ -82,7 +85,7 @@ do
     %cmake %rocm_cmake_options \
 	   -DCMAKE_CXX_FLAGS="-mcmodel=medium" \
 %if %{with test}
-           %rocm_cmake_test_options
+           -DBUILD_CLIENTS_TESTS=ON
 %endif
 
     %cmake_build
