@@ -7,6 +7,9 @@
 # hipcc does not support some clang flags
 %global build_cxxflags %(echo %{optflags} | sed -e 's/-fstack-protector-strong/-Xarch_host -fstack-protector-strong/' -e 's/-fcf-protection/-Xarch_host -fcf-protection/')
 
+# No debug source produced
+%global debug_package %{nil}
+
 # $gpu will be evaluated in the loops below
 %global _vpath_builddir %{_vendor}-%{_target_os}-build-${gpu}
 
@@ -33,6 +36,7 @@ Source0:        %{url}/archive/refs/tags/rocm-%{rocm_version}.tar.gz#/%{upstream
 BuildRequires:  cmake
 BuildRequires:  compiler-rt
 BuildRequires:  clang-devel
+BuildRequires:  fmt-devel
 BuildRequires:  lld
 BuildRequires:  llvm-devel
 BuildRequires:  ninja-build
@@ -47,7 +51,6 @@ BuildRequires:  rocprim-devel
 
 %if %{with test}
 BuildRequires:  blas-static
-BuildRequires:  fmt-devel
 BuildRequires:  gcc-gfortran
 BuildRequires:  gtest-devel
 BuildRequires:  lapack-static
@@ -123,6 +126,33 @@ done
 
 %if %{with test}
 %files test
+%dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}/test
+%dir %{_datadir}/%{name}/test/mat_20_60
+%dir %{_datadir}/%{name}/test/mat_20_100
+%dir %{_datadir}/%{name}/test/mat_20_140
+%dir %{_datadir}/%{name}/test/mat_50_60
+%dir %{_datadir}/%{name}/test/mat_50_100
+%dir %{_datadir}/%{name}/test/mat_50_140
+%dir %{_datadir}/%{name}/test/mat_100_300
+%dir %{_datadir}/%{name}/test/mat_100_500
+%dir %{_datadir}/%{name}/test/mat_100_700
+%dir %{_datadir}/%{name}/test/mat_250_300
+%dir %{_datadir}/%{name}/test/mat_250_500
+%dir %{_datadir}/%{name}/test/mat_250_700
+
+%{_datadir}/%{name}/test/mat_20_60/*
+%{_datadir}/%{name}/test/mat_20_100/*
+%{_datadir}/%{name}/test/mat_20_140/*
+%{_datadir}/%{name}/test/mat_50_60/*
+%{_datadir}/%{name}/test/mat_50_100/*
+%{_datadir}/%{name}/test/mat_50_140/*
+%{_datadir}/%{name}/test/mat_100_300/*
+%{_datadir}/%{name}/test/mat_100_500/*
+%{_datadir}/%{name}/test/mat_100_700/*
+%{_datadir}/%{name}/test/mat_250_300/*
+%{_datadir}/%{name}/test/mat_250_500/*
+%{_datadir}/%{name}/test/mat_250_700/*
 %{_bindir}/%{name}*
 %{_libdir}/rocm/gfx*/bin/%{name}*
 %endif
